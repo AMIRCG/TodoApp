@@ -1,59 +1,58 @@
-// ignore_for_file: use_key_in_widget_constructors
+// ignore_for_file: use_key_in_widget_constructors, avoid_print
 //local state + global state + Callback in Dart
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-class TaskTile extends StatefulWidget {
-  const TaskTile({
-    Key? key,
-  }) : super(key: key);
+class TaskTile extends StatelessWidget {
+  TaskTile({
+    required this.taskTitle,
+    required this.isChecked,
+    this.checkBoxCallBack,
+    this.deleteBoxCallBack,
+  });
 
-  @override
-  State<TaskTile> createState() => _TaskTileState();
-}
+  final bool isChecked;
+  final String taskTitle;
+  final Function? checkBoxCallBack;
+  final Function? deleteBoxCallBack;
+  late Timer timer;
+  bool isLongPressed = false;
+  void startOperation(valueOnTapDown) {
+    timer = Timer(const Duration(seconds: 2), () {
+      print('long Pressed Event');
+      isLongPressed = true;
+      deleteBoxCallBack!();
+    });
+  }
 
-class _TaskTileState extends State<TaskTile> {
-  bool isChecked = false;
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(
-        'This is a task.',
-        style: TextStyle(
-            decoration: isChecked ? TextDecoration.lineThrough : null),
+      title: GestureDetector(
+        onTapDown: (value_0) {
+          startOperation(value_0);
+        },
+        onTapUp: (value_1) {
+          timer.cancel();
+          if (!isLongPressed) {
+            print("Is a onTap event");
+          } else {
+            isLongPressed = false;
+          }
+        },
+        child: Text(
+          taskTitle,
+          style: TextStyle(
+              decoration: isChecked ? TextDecoration.lineThrough : null),
+        ),
       ),
-      trailing: TaskCheckBox(
-        isChecked: isChecked,
-        isCheckBox: (bool checkboxState) {
-          setState(
-            () {
-              isChecked = checkboxState;
-            },
-          );
+      trailing: Checkbox(
+        value: isChecked,
+        onChanged: (value) {
+          checkBoxCallBack!();
         },
       ),
     );
-  }
-}
-
-class TaskCheckBox extends StatelessWidget {
-  const TaskCheckBox({required this.isChecked, this.isCheckBox});
-  final bool isChecked; //bool value
-  final Function(bool)? isCheckBox; //function for onChanged
-
-  @override
-  Widget build(BuildContext context) {
-    return Checkbox(
-      value: isChecked,
-      onChanged: () {
-        isCheckBox!();
-      },
-    );
-    /*
-          isCheckBox Function
-          (bool checkboxState) {
-            setState(() {
-              isChecked = checkboxState;
-            });
-          */
   }
 }

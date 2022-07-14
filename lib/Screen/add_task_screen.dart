@@ -1,12 +1,14 @@
-// ignore_for_file: camel_case_types
+// ignore_for_file: camel_case_types, must_be_immutable, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
+import 'package:todo_flutter/Models/TaskData.dart';
+import 'package:todo_flutter/constant.dart';
+import 'package:provider/provider.dart';
 
 class Add_Task extends StatelessWidget {
-  const Add_Task({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    String? newText;
     return Container(
       color: const Color(0xff757575),
       child: Container(
@@ -32,21 +34,17 @@ class Add_Task extends StatelessWidget {
               ),
             ),
             TextField(
-              decoration: InputDecoration(
-                hintText: 'New Task',
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.grey, width: 1.5),
-                ), //enabled Border
-                focusedBorder: OutlineInputBorder(
-                  gapPadding: 5.9,
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.blue, width: 1.5),
-                ), //focused Border
-              ),
+              decoration: kInputDecorationCustomTextField,
+              onChanged: (valueText) {
+                newText = valueText;
+              },
             ),
+            const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Provider.of<TaskData>(context, listen: false).addTask(newText!);
+                Navigator.pop(context);
+              },
               child: const Text(
                 'Add',
                 style: TextStyle(

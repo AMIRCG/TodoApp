@@ -1,21 +1,19 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_key_in_widget_constructors, must_be_immutable, avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:todo_flutter/Models/TaskData.dart';
 import 'package:todo_flutter/Screen/add_task_screen.dart';
 import 'package:todo_flutter/widgets/task_list.dart';
+import 'package:provider/provider.dart';
 
 class TaskScreen extends StatelessWidget {
-  const TaskScreen({Key? key}) : super(key: key);
-
-  // Widget customBottomSheet(BuildContext context) => Container();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
-              context: context, builder: (context) => const Add_Task());
+              context: context, builder: (context) => Add_Task());
           //add Task to list
         },
         child: const Icon(Icons.add),
@@ -33,8 +31,8 @@ class TaskScreen extends StatelessWidget {
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                CircleAvatar(
+              children: [
+                const CircleAvatar(
                   backgroundColor: Colors.white,
                   radius: 30,
                   child: Icon(
@@ -43,8 +41,8 @@ class TaskScreen extends StatelessWidget {
                     color: Colors.lightBlueAccent,
                   ),
                 ),
-                SizedBox(height: 10),
-                Text(
+                const SizedBox(height: 10),
+                const Text(
                   'Todo',
                   style: TextStyle(
                     color: Colors.white,
@@ -53,8 +51,8 @@ class TaskScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '12 Tasks',
-                  style: TextStyle(
+                  '${Provider.of<TaskData>(context).taskCount} Tasks',
+                  style: const TextStyle(
                     fontSize: 18,
                     color: Colors.white,
                   ),
@@ -72,7 +70,7 @@ class TaskScreen extends StatelessWidget {
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: const TaskList(),
+              child: TaskList(),
             ),
           ),
         ],
